@@ -1,34 +1,21 @@
-// Função para carregar o arquivo de texto usando AJAX
+// Função para fazer a requisição AJAX
 function carregarNomes() {
     var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
+    xhr.open('GET', 'nomes_jojo.txt', true);
+    xhr.onreadystatechange = function () {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
-                var nomesString = xhr.responseText;
-                exibirNomes(nomesString);
+                var nomes = xhr.responseText.split(',');
+                var lista = document.getElementById('nomes-lista');
+                nomes.forEach(function (nome) {
+                    var li = document.createElement('li');
+                    li.textContent = nome.trim();
+                    lista.appendChild(li);
+                });
             } else {
-                console.error('Erro ao carregar o arquivo de nomes.');
+                console.error('Erro ao carregar nomes:', xhr.status);
             }
         }
     };
-    xhr.open('GET', 'nomes.txt', true);
     xhr.send();
 }
-
-// Função para exibir os nomes em uma lista
-function exibirNomes(nomesString) {
-    var nomes = nomesString.split('\n'); // Dividindo a string em um array de nomes
-
-    var listaHTML = '';
-    nomes.forEach(function(nome) {
-        listaHTML += '<li>' + nome + '</li>';
-    });
-
-    var nomesLista = document.getElementById('nomes-lista');
-    nomesLista.innerHTML = listaHTML;
-}
-
-// Carregar os nomes ao carregar a página
-window.onload = function() {
-    carregarNomes();
-}; 
